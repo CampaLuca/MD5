@@ -11,7 +11,7 @@ There are three types of padding (the index can be 0,1 or 2 and it is the parame
 - 2: simple padding: only 0x80 and zeros, but it is not required if the message length is a multiple of 64 bytes (512 bits)
 
 ### Examples
-In the >main function there is an example of the usage. 
+In the > main function there is an example of the usage. 
 
 ### Remark
 update(msg1);
