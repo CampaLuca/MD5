@@ -6,9 +6,9 @@ g++ sorgente -o nome_output
 
 ### Paddings
 There are three types of padding (the index can be 0,1 or 2 and it is the parameter of the initializer of the MD5 class).
-0: complete padding (0x80, zeros and length)
-1: only 0x80 and zeros (at least one byte of padding is added)
-2: simple padding: only 0x80 and zeros, but it is not required if the message length is a multiple of 64 bytes (512 bits)
+- 0: complete padding (0x80, zeros and length)
+- 1: only 0x80 and zeros (at least one byte of padding is added)
+- 2: simple padding: only 0x80 and zeros, but it is not required if the message length is a multiple of 64 bytes (512 bits)
 
 ### Examples
 In the >main function there is an example of the usage. 
