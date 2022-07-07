@@ -12,20 +12,20 @@ class MD5 {
             this->padding_type = padding_type;
         }
 
-        void update(char* message) {
-            int new_length = this->length + strlen(message);
+        void update(uint8_t* message, int message_length) {
+            int new_length = this->length + message_length;
 
             if (this->length == 0) {
-                this->text = (char*) malloc(new_length * sizeof(char));
+                this->text = (uint8_t*) malloc(new_length * sizeof(uint8_t));
             } else {
-                char* tmp = (char*) realloc(this->text, new_length*sizeof(char));
+                uint8_t* tmp = (uint8_t*) realloc(this->text, new_length*sizeof(uint8_t));
                 if (tmp) {
                     this->text = tmp;
                 }
             }
 
 
-            memcpy(this->text + length, message, strlen(message)*sizeof(char));
+            memcpy(this->text + length, message, message_length*sizeof(char));
             this->length = new_length;
 
 
@@ -36,14 +36,12 @@ class MD5 {
             uint32_t* p_out = (uint32_t*) malloc(4 * sizeof(uint32_t));
             for (int i = 0; i < 4; i++) {
                 char* s = (char*) malloc(8*sizeof(uint8_t));
-                memcpy(s, prev_output, 8*sizeof(uint8_t));
+                memcpy(s, prev_output+(i*8), 8*sizeof(uint8_t));
                 uint32_t b = (uint32_t)strtol(s, NULL, 16);
                 b = get_value_from_hash(b);
+                p_out[i] = b;
                 free(s);
-            }
-
-            for (int i = 0; i < 4; i++) {
-                this->state[i] = p_out[i];
+                this->state[i] = b;
             }
         }
 
@@ -61,7 +59,7 @@ class MD5 {
     private:
         int length = 0;
         int padding_type = 0; // default 0
-        char* text;
+        uint8_t* text;
         uint32_t state[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476}; // A B C D
         uint32_t* final_state = (uint32_t*)malloc(4*sizeof(uint32_t));
 
@@ -101,7 +99,7 @@ class MD5 {
         /*
         *  Complete padding (0x80 and zeros and length) - At least 1 byte of padding is added
         */
-        uint8_t* complete_pad(char* value, int* bytes_number) {
+        uint8_t* complete_pad(uint8_t* value, int* bytes_number) {
             uint64_t message_length = (*bytes_number) * 8; // the length of the message in bits
             int pad_length = 1;
 
@@ -140,7 +138,7 @@ class MD5 {
         /*
         *  Simple padding (0x80 and zeros) - at least 1 byte of padding is always added
         */
-        uint8_t* pad(char* value, int* bytes_number) {
+        uint8_t* pad(uint8_t* value, int* bytes_number) {
             int pad_length = 1;
 
             while (((*bytes_number + pad_length) % 64) != 0) {
@@ -169,7 +167,7 @@ class MD5 {
         /*
         *  Simple padding (0x80 and zeros) if and only the dimension is not a multiple of 64 bytes (512 bits)
         */
-        uint8_t* simple_pad(char* value, int* bytes_number) {
+        uint8_t* simple_pad(uint8_t* value, int* bytes_number) {
             int pad_length = 0;
 
             while (((*bytes_number + pad_length) % 64) != 0) {
@@ -276,23 +274,10 @@ class MD5 {
 
             }
 
+
+
         }
 
 
 };
 
-int main() {
-    MD5* md5 = new MD5(0);
-
-    char* message = "ciaociaociaociaociaociaociaociaociaociaociaociaociao";
-    md5->update(message);
-    char* msg = "ciao";
-    md5->update(msg);
-    char* msg2 = "ciao";
-    md5->update(msg2);
-    char* result = md5->finalize();
-
-    printf("%s\n", result);
-
-    return 0;
-}
