@@ -1,7 +1,7 @@
 ## MD5
 ### Usage
 ```
-g++ sorgente -o nome_output
+g++ src_code -o nome_output
 ./nome_output
 ```
 
